@@ -2,36 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Code') {
+        // stage('clone') {
+        //     steps {
+        //       // git branch: 'main', url: 'https://github.com/CloudTechDevOps/Terraform_CICD.git'
+        //     }
+        // }
+        stage('init') {
             steps {
-                // Proper Git checkout using SCM step
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: 'main']],
-                    extensions: [],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/Abhi-CloudDevops/Terraform_CICD.git'
-                    ]]
-                ])
+                sh 'terraform init'
             }
         }
-
-        stage('Terraform Init') {
+         stage('plan') {
             steps {
-                sh 'terraform init -input=false'
+                sh 'terraform plan'
             }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                sh 'terraform plan -out=tfplan'
-            }
-        }
-    }
-
-    post {
-        always {
-            cleanWs() // Clean workspace post-build
         }
     }
 }
